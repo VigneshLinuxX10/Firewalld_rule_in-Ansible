@@ -1,0 +1,25 @@
+---
+- name: Firewalld Configuration
+  hosts: web_server
+  become: yes
+  tasks:
+    - name: Conform that Firewalld installed and Running
+      yum:
+        name: firewalld
+        state: present
+
+    - name: Start and enable firewalld-service
+      service:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Open HTTP and HTTPS ports permanently
+      firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        state: enabled
+        immediate: yes
+      loop:
+        - http
+        - https
